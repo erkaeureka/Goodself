@@ -1,20 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  useColorScheme,
+} from "react-native";
+import { PostIndex } from "./src/scenes/posts";
+import { store, persistor } from "./src/redux/store";
+import { PersistGate } from "redux-persist/es/integration/react";
+import { Provider } from "react-redux";
+import {
+  Colors,
+  Header,
+  LearnMoreLinks,
+} from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
+  const isDarkMode = useColorScheme() === "dark";
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <SafeAreaView style={backgroundStyle}>
+            <StatusBar
+              barStyle={isDarkMode ? "light-content" : "dark-content"}
+              backgroundColor={backgroundStyle.backgroundColor}
+            />
+            <ScrollView
+              contentInsetAdjustmentBehavior="automatic"
+              style={backgroundStyle}
+            >
+              {/* <Header /> */}
+              <PostIndex />
+            </ScrollView>
+          </SafeAreaView>
+        </PersistGate>
+      </Provider>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
